@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Rozliczenie czynszu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: "Times New Roman", serif;
@@ -10,6 +11,9 @@
       color: #f5f5f5;
       margin: 0;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     h1 {
       font-size: 40px;
@@ -32,6 +36,7 @@
       border: 1px solid #555;
       padding: 12px;
       text-align: center;
+      word-break: break-word;
     }
     th {
       background: #333;
@@ -55,117 +60,139 @@
     @keyframes blink {
       50% { opacity: 0.5; }
     }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #888;
+      border-top: 1px solid #444;
+    }
+    footer span {
+      margin-left: 5px;
+    }
+
+    /* Responsywność */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 28px;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 14px;
+      }
+      table {
+        font-size: 14px;
+      }
+      footer {
+        font-size: 12px;
+      }
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 22px;
+      }
+      th, td {
+        padding: 6px;
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1 id="summary">DO ZAPŁATY: 2650 zł</h1>
+  <h1 id="summary">DO ZAPŁATY: 0 zł</h1>
 
-  <table>
+  <table id="tabela">
     <tr>
       <th>Miesiąc</th>
       <th>Termin płatności</th>
       <th>Kwota</th>
       <th>Status</th>
     </tr>
-    <tr class="paid">
-      <td>Styczeń</td>
-      <td>31.01.2025</td>
-      <td>1150 zł</td>
-      <td>Zapłacone (część wliczona)</td>
-    </tr>
-    <tr class="paid">
-      <td>Luty</td>
-      <td>28.02.2025</td>
-      <td>1150 zł</td>
-      <td>Zapłacone (część wliczona)</td>
-    </tr>
-    <tr class="paid">
-      <td>Marzec</td>
-      <td>31.03.2025</td>
-      <td>1150 zł</td>
-      <td>Zapłacone (część wliczona)</td>
-    </tr>
-    <tr class="paid">
-      <td>Kwiecień</td>
-      <td>30.04.2025</td>
-      <td>1150 zł</td>
-      <td>Zapłacone (część wliczona)</td>
-    </tr>
-    <tr class="paid">
-      <td>Maj</td>
-      <td>31.05.2025</td>
-      <td>1150 zł</td>
-      <td>Zapłacone (część wliczona)</td>
-    </tr>
-    <tr class="unpaid">
-      <td>Czerwiec</td>
-      <td>30.06.2025</td>
-      <td>1150 zł</td>
-      <td id="czerwiec">Brak wpłaty</td>
-    </tr>
-    <tr class="unpaid">
-      <td>Lipiec</td>
-      <td>31.07.2025</td>
-      <td>1150 zł</td>
-      <td id="lipiec">Zaległości + opłata miesięczna</td>
-    </tr>
-    <tr class="pending">
-      <td>Sierpień</td>
-      <td>31.08.2025</td>
-      <td>1150 zł</td>
-      <td>Termin jeszcze nie minął</td>
-    </tr>
-    <tr class="pending">
-      <td>Wrzesień</td>
-      <td>30.09.2025</td>
-      <td>1150 zł</td>
-      <td>Termin jeszcze nie minął</td>
-    </tr>
-    <tr class="pending">
-      <td>Październik</td>
-      <td>31.10.2025</td>
-      <td>1150 zł</td>
-      <td>Termin jeszcze nie minął</td>
-    </tr>
-    <tr class="pending">
-      <td>Listopad</td>
-      <td>30.11.2025</td>
-      <td>1150 zł</td>
-      <td>Termin jeszcze nie minął</td>
-    </tr>
-    <tr class="pending">
-      <td>Grudzień</td>
-      <td>31.12.2025</td>
-      <td>1150 zł</td>
-      <td>Termin jeszcze nie minął</td>
-    </tr>
   </table>
 
+ <footer>
+  <p>© <span id="year"></span> Website designed by <strong>Marek Websites</strong> 🧠</p>
+  <p style="font-size:12px; color:#bbb;">
+    Strona automatycznie aktualizuje status wpłat na podstawie weryfikacji księgowej.
+  </p>
+  <div style="margin-top:10px;">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https://github.com/pmarek02" alt="QR do płatności">
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").innerText = new Date().getFullYear();
+</script>
+
+
+
   <script>
-    function dniOdTerminu(data) {
-      const dzis = new Date();
-      const termin = new Date(data);
-      if (dzis > termin) {
-        return Math.floor((dzis - termin) / (1000*60*60*24));
+    document.getElementById("year").innerText = new Date().getFullYear();
+
+    const miesiace = [
+      {nazwa: "Styczeń", data: "2025-01-31", kwota: 1150},
+      {nazwa: "Luty", data: "2025-02-28", kwota: 1150},
+      {nazwa: "Marzec", data: "2025-03-31", kwota: 1150},
+      {nazwa: "Kwiecień", data: "2025-04-30", kwota: 1150},
+      {nazwa: "Maj", data: "2025-05-31", kwota: 1150},
+      {nazwa: "Czerwiec", data: "2025-06-30", kwota: 1150},
+      {nazwa: "Lipiec", data: "2025-07-31", kwota: 1150},
+      {nazwa: "Sierpień", data: "2025-08-31", kwota: 1150},
+      {nazwa: "Wrzesień", data: "2025-09-30", kwota: 1150},
+      {nazwa: "Październik", data: "2025-10-31", kwota: 1150},
+      {nazwa: "Listopad", data: "2025-11-30", kwota: 1150},
+      {nazwa: "Grudzień", data: "2025-12-31", kwota: 1150}
+    ];
+
+    const wplaty = 400 + 400 + 2500 + 100 + 2000; // suma wszystkich wpłat
+    let pozostalaKwota = wplaty;
+    const dzis = new Date();
+    let sumaDoZaplaty = 0;
+
+    const tabela = document.getElementById("tabela");
+
+    miesiace.forEach(m => {
+      const tr = document.createElement("tr");
+      const termin = new Date(m.data);
+      const tdMiesiac = document.createElement("td");
+      tdMiesiac.innerText = m.nazwa;
+      const tdTermin = document.createElement("td");
+      tdTermin.innerText = termin.toLocaleDateString();
+      const tdKwota = document.createElement("td");
+      tdKwota.innerText = m.kwota + " zł";
+      const tdStatus = document.createElement("td");
+
+      if (dzis >= termin) {
+        if (pozostalaKwota >= m.kwota) {
+          tdStatus.innerText = "Zapłacone (100%)";
+          tr.className = "paid";
+          pozostalaKwota -= m.kwota;
+        } else if (pozostalaKwota > 0) {
+          let procent = Math.floor((pozostalaKwota / m.kwota) * 100);
+          tdStatus.innerText = `Częściowo opłacone (${procent}%)`;
+          tr.className = "unpaid";
+          sumaDoZaplaty += m.kwota - pozostalaKwota;
+          pozostalaKwota = 0;
+        } else {
+          tdStatus.innerText = `Brak wpłaty`;
+          tr.className = "unpaid";
+          sumaDoZaplaty += m.kwota;
+        }
       } else {
-        return 0;
+        tdStatus.innerText = "Termin jeszcze nie minął";
+        tr.className = "pending";
       }
-    }
 
-    const dniCzerwiec = dniOdTerminu("2025-06-30");
-    const dniLipiec = dniOdTerminu("2025-07-31");
+      tr.appendChild(tdMiesiac);
+      tr.appendChild(tdTermin);
+      tr.appendChild(tdKwota);
+      tr.appendChild(tdStatus);
+      tabela.appendChild(tr);
+    });
 
-    if (dniCzerwiec > 0) {
-      document.getElementById("czerwiec").innerText += ` (minęło ${dniCzerwiec} dni)`;
-    }
-    if (dniLipiec > 0) {
-      document.getElementById("lipiec").innerText += ` (minęło ${dniLipiec} dni)`;
-    }
-
-    const suma = 2650;
-    document.getElementById("summary").innerText = 
-      `DO ZAPŁATY: ${suma} zł (od terminu minęło ${dniLipiec} dni)`;
+    document.getElementById("summary").innerText = `DO ZAPŁATY: ${sumaDoZaplaty} zł`;
   </script>
 
 </body>
