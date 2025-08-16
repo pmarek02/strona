@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Rozliczenie czynszu</title>
+  <style>
+    body {
+      font-family: "Times New Roman", serif;
+      background: #1a1a1a;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 40px;
+      color: #ff4d4d;
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 3px solid #ff4d4d;
+      padding-bottom: 10px;
+      animation: blink 1s infinite;
+      letter-spacing: 2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      background: #262626;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+    }
+    th, td {
+      border: 1px solid #555;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background: #333;
+      color: #fff;
+      font-size: 18px;
+    }
+    .paid {
+      background: #204020;
+      color: #cfc;
+    }
+    .unpaid {
+      background: #401a1a;
+      color: #ff9999;
+      font-weight: bold;
+      animation: blink 1s infinite;
+    }
+    .pending {
+      background: #2a2a2a;
+      color: #bbb;
+    }
+    @keyframes blink {
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="summary">DO ZAPŁATY: 2650 zł</h1>
+
+  <table>
+    <tr>
+      <th>Miesiąc</th>
+      <th>Termin płatności</th>
+      <th>Kwota</th>
+      <th>Status</th>
+    </tr>
+    <tr class="paid">
+      <td>Styczeń</td>
+      <td>31.01.2025</td>
+      <td>1150 zł</td>
+      <td>Zapłacone (część wliczona)</td>
+    </tr>
+    <tr class="paid">
+      <td>Luty</td>
+      <td>28.02.2025</td>
+      <td>1150 zł</td>
+      <td>Zapłacone (część wliczona)</td>
+    </tr>
+    <tr class="paid">
+      <td>Marzec</td>
+      <td>31.03.2025</td>
+      <td>1150 zł</td>
+      <td>Zapłacone (część wliczona)</td>
+    </tr>
+    <tr class="paid">
+      <td>Kwiecień</td>
+      <td>30.04.2025</td>
+      <td>1150 zł</td>
+      <td>Zapłacone (część wliczona)</td>
+    </tr>
+    <tr class="paid">
+      <td>Maj</td>
+      <td>31.05.2025</td>
+      <td>1150 zł</td>
+      <td>Zapłacone (część wliczona)</td>
+    </tr>
+    <tr class="unpaid">
+      <td>Czerwiec</td>
+      <td>30.06.2025</td>
+      <td>1150 zł</td>
+      <td id="czerwiec">Brak wpłaty</td>
+    </tr>
+    <tr class="unpaid">
+      <td>Lipiec</td>
+      <td>31.07.2025</td>
+      <td>1150 zł</td>
+      <td id="lipiec">Zaległości + opłata miesięczna</td>
+    </tr>
+    <tr class="pending">
+      <td>Sierpień</td>
+      <td>31.08.2025</td>
+      <td>1150 zł</td>
+      <td>Termin jeszcze nie minął</td>
+    </tr>
+    <tr class="pending">
+      <td>Wrzesień</td>
+      <td>30.09.2025</td>
+      <td>1150 zł</td>
+      <td>Termin jeszcze nie minął</td>
+    </tr>
+    <tr class="pending">
+      <td>Październik</td>
+      <td>31.10.2025</td>
+      <td>1150 zł</td>
+      <td>Termin jeszcze nie minął</td>
+    </tr>
+    <tr class="pending">
+      <td>Listopad</td>
+      <td>30.11.2025</td>
+      <td>1150 zł</td>
+      <td>Termin jeszcze nie minął</td>
+    </tr>
+    <tr class="pending">
+      <td>Grudzień</td>
+      <td>31.12.2025</td>
+      <td>1150 zł</td>
+      <td>Termin jeszcze nie minął</td>
+    </tr>
+  </table>
+
+  <script>
+    function dniOdTerminu(data) {
+      const dzis = new Date();
+      const termin = new Date(data);
+      if (dzis > termin) {
+        return Math.floor((dzis - termin) / (1000*60*60*24));
+      } else {
+        return 0;
+      }
+    }
+
+    const dniCzerwiec = dniOdTerminu("2025-06-30");
+    const dniLipiec = dniOdTerminu("2025-07-31");
+
+    if (dniCzerwiec > 0) {
+      document.getElementById("czerwiec").innerText += ` (minęło ${dniCzerwiec} dni)`;
+    }
+    if (dniLipiec > 0) {
+      document.getElementById("lipiec").innerText += ` (minęło ${dniLipiec} dni)`;
+    }
+
+    const suma = 2650;
+    document.getElementById("summary").innerText = 
+      `DO ZAPŁATY: ${suma} zł (od terminu minęło ${dniLipiec} dni)`;
+  </script>
+
+</body>
+</html>
